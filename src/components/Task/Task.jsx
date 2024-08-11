@@ -13,10 +13,11 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CommentIcon from '@mui/icons-material/Comment';
-import {IconButton} from "@mui/material";
+import { IconButton } from "@mui/material";
+import Comment from '../Comment';
+import comment from "../Comment"; // 导入 Comment 组件
 
-
-export default function Task({ propTitle, propDescription, propTime, onDelete}) {
+export default function Task({ propTitle, propDescription, propTime, onDelete }) {
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         ...theme.typography.body2,
@@ -24,12 +25,28 @@ export default function Task({ propTitle, propDescription, propTime, onDelete}) 
         textAlign: 'left',
         color: theme.palette.text.secondary,
     }));
+
     const [title, setTitle] = useState(propTitle);
     const [description, setDescription] = useState(propDescription);
-    const [type, setType] = useState(["待办", "进行中", "已完成"]);
-
+    const [comments, setComments] = useState([]); // 添加评论状态
+    const [showComments, setShowComments] = useState(false); // 控制评论显示状态
     const handleEdit = (setter) => (event) => {
         setter((event.target.textContent) !== "" ? event.target.textContent : "请输入内容...");
+    };
+
+    const handleAddComment = (newComment) => {
+        const timestamp = new Date().toLocaleString(); // 获取当前时间
+        if(!showComments) {toggleComments();}
+        setComments([...comments, { text: newComment, time: timestamp }]); // 添加时间戳
+    };
+
+    const handleDeleteComment = (index) => {
+        const updatedComments = comments.filter((_, i) => i !== index); // 删除特定评论
+        setComments(updatedComments);
+    };
+
+    const toggleComments = () => {
+        setShowComments(!showComments); // 切换评论显示状态
     };
 
     const FullWidthGrid = () => {
@@ -78,11 +95,11 @@ export default function Task({ propTitle, propDescription, propTime, onDelete}) 
                     <Button variant="outlined" startIcon={<AttachFileIcon />}>
                         添加附件
                     </Button>
-                    <Button variant="outlined" startIcon={<CommentIcon />}>
+                    <Button variant="outlined" startIcon={<CommentIcon />} onClick={() => handleAddComment("新评论内容")}>
                         添加评论
                     </Button>
-                    <Button variant="outlined" startIcon={<CommentIcon />}>
-                        查看评论
+                    <Button variant="outlined" startIcon={<CommentIcon />} onClick={toggleComments}>
+                        {showComments ? '隐藏评论' : '查看评论'}
                     </Button>
                 </Stack>
             </Box>
@@ -91,6 +108,30 @@ export default function Task({ propTitle, propDescription, propTime, onDelete}) 
             <Box sx={{ p: 2 }}>
                 <MultipleSelectCheckmarks />
             </Box>
-        </Card>
-    );
+            {showComments && (
+                <Box sx={{p: 2}}>
+                    {comments.map((comment, index) => (
+                        <div>
+                            <Comment
+                                initialDescription={comment.text}
+                                onUpdate={(newDescription) => {
+                                    const updatedComments = [...comments];
+                                    updatedComments[index].text = newDescription; // 更新评论内容
+                                    setComments(updatedComments);
+                                }}
+                            />
+                            <Typography variant="caption" color="textSecondary">
+                                评论于：{comment.time} {/* 显示评论时间 */}
+                            </Typography>
+                            <IconButton color="error" onClick={() => handleDeleteComment(index)}>
+                                <DeleteIcon/>
+                            </IconButton>
+                        </div>
+            ))}
+        </Box>
+    )
+}
+</Card>
+)
+    ;
 }

@@ -5,6 +5,7 @@ import FloatingActionButtons from "../PlusButton";
 import BasicTextFields from "../TextField";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
 
 const TaskList = () => {
     const [tasks, setTasks] = useState([]);
@@ -54,7 +55,7 @@ const TaskList = () => {
 
     return (
         <div className="todo-container">
-            <Card>
+            <Paper>
                 <h1>待办：{tasks.length}</h1>
                 <Divider/>
                 <div className="add-todo" style={{display: 'flex', alignItems: 'center'}}>
@@ -85,7 +86,7 @@ const TaskList = () => {
                         ))}
                     </ul>
                 </div>
-            </Card>
+            </Paper>
         </div>
     );
 };
