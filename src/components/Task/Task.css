@@ -1,0 +1,61 @@
+.todo-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%; /* 增加宽度 */
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between; /* 将标题和按钮分开 */
+    align-items: center; /* 垂直居中对齐 */
+}
+
+.task-title {
+    font-weight: bold; /* 黑体粗体 */
+    font-size: 1.2em; /* 增加标题字体大小 */
+    word-wrap: break-word;
+}
+
+.task-content {
+    margin: 10px 0; /* 增加上下间距 */
+    word-wrap: break-word; /* 自动换行 */
+}
+
+.task-actions {
+    display: flex; /* 使用 flexbox 布局 */
+    justify-content: center; /* 左右对齐按钮 */
+    margin-top: 10px; /* 上方间距 */
+}
+
+.options {
+    margin-top: 10px;
+}
+
+.option-btn {
+    margin-right: 5px;
+}
+
+/* TaskList.css */
+.add-todo {
+    margin-bottom: 20px;
+}
+
+.input-todo {
+    width: 100%; /* 使输入框宽度占满 */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.todo-btn {
+    padding: 10px;
+    background-color: #da0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
