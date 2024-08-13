@@ -22,10 +22,6 @@ jobs:
       - name: Build application
         working-directory: frontend
         run: npm run build
-      - name: deploy
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: build
+
         
 
