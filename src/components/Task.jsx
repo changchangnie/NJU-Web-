@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CommentIcon from '@mui/icons-material/Comment';
-import BasicSelect from "./selector";
+import BasicSelect from "./Selector";
 import {
     IconButton,
     Dialog,
@@ -44,8 +44,9 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
     const [dialogOpen, setDialogOpen] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewFile, setPreviewFile] = useState(null);
+    const [listState,setListState] = useState({initialState});
 
-    const handleEdit = (setter) => (event) => {
+    const handleEdit = (setter) => (event) => { //改变任务内容
         setter((event.target.textContent) !== "" ? event.target.textContent : "请输入内容...");
         onToggle(title,description,comments,attachments);
     };
@@ -80,25 +81,35 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
         setAttachments(prevAttachments => prevAttachments.filter((_, idx) => idx !== index));
         onToggle(title,description,comments,attachments);
     }
-
     const handleDrop = (acceptedFiles) => {
         const validFiles = acceptedFiles.filter(file =>
             file.type === 'image/png'
         );
 
         if (validFiles.length > 0) {
-            const filesWithDetails = validFiles.map(file => ({
-                name: file.name, // 文件名
-                previewer: URL.createObjectURL(file), // 创建预览 URL
-                file // 也可以存储完整的文件对象
-            }));
-            console.log(validFiles[0].previewer);
-            setAttachments(prev => [...prev, ...filesWithDetails]);
-        }
-        setDialogOpen(false);
-        onToggle(title,description,comments,attachments);
-    };
+            const filesWithDetailsPromises = validFiles.map(file => {
+                return new Promise((resolve) => {
+                    const previewer = URL.createObjectURL(file); // 创建预览 URL
+                    resolve({
+                        name: file.name, // 文件名
+                        previewer, // 预览 URL
+                        file // 完整的文件对象
+                    });
+                });
+            });
 
+            // 等待所有的 Promise 完成
+            Promise.all(filesWithDetailsPromises).then(filesWithDetails => {
+                console.log(filesWithDetails[0])
+                setAttachments(prev => [...prev, ...filesWithDetails]); // 更新 attachments
+                setDialogOpen(false);
+                onToggle(title, description, comments, [...attachments, ...filesWithDetails]); // 传递新的 attachments
+            });
+        } else {
+            setDialogOpen(false);
+            onToggle(title, description, comments, attachments); // 如果没有有效文件，仍然调用 onToggle
+        }
+    };
     const handlePreviewFile = (fileName) => {
         setPreviewFile(fileName);
         setPreviewOpen(true);
@@ -219,7 +230,7 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
                 <DialogContent>
                     <Box {...getRootProps()} sx={{ border: '2px dashed grey', padding: 2, textAlign: 'center' }}>
                         <input {...getInputProps()} />
-                        <Typography>拖拽文件到这里，或点击选择文件（支持.jpg和.png 格式）</Typography>
+                        <Typography>拖拽文件到这里，或点击选择文件（支持.png 格式）</Typography>
                     </Box>
                 </DialogContent>
                 <DialogActions>
@@ -231,19 +242,21 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
             {attachments.length > 0 && (<Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} maxWidth="md" fullWidth>
                 <DialogTitle>附件预览</DialogTitle>
                 <DialogContent>
-                    (
+                    {previewFile && previewFile.previewer ? (
                         <img
                             src={previewFile.previewer}
                             alt="Preview"
                             style={{ width: '100%', height: 'auto' }}
                         />
-                    )
+                    ) : (
+                        <p>No preview available</p> // 或者其他的占位内容
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setPreviewOpen(false)}>关闭</Button>
                 </DialogActions>
             </Dialog>)}
-            <BasicSelect initialState={initialState}/>
+            <BasicSelect initialState={initialState} onChange={(state) => onMoveToList(state)}/>
         </Card>
     );
 }

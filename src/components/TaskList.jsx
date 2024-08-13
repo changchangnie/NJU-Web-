@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./TaskList/TaskList.css";
 import Task from "./Task";
 import FloatingActionButtons from "./PlusButton";
 import BasicTextFields from "./TextField";
@@ -49,6 +48,7 @@ const TaskList = ({ TaskListTitle, tasks, setTasks, moveTask, fromList }) => {
         updateLocalStorage(updatedTasks);
     };
     const moveTaskToList = (id, toList) => {
+        if(fromList === toList) return;
         moveTask(id, fromList, toList);
     };
 
