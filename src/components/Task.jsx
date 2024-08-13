@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CommentIcon from '@mui/icons-material/Comment';
+import BasicSelect from "./selector";
 import {
     IconButton,
     Dialog,
@@ -22,10 +23,10 @@ import {
     ListItem,
     ListItemText
 } from "@mui/material";
-import Comment from '../Comment';
+import Comment from './Comment';
 import { useDropzone } from 'react-dropzone';
 
-export default function Task({ propTitle, propDescription, propTime, onDelete }) {
+export default function Task({ propTitle, propDescription, propTime, onDelete, initialState,onToggle,onMoveToList}) {
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         ...theme.typography.body2,
@@ -46,6 +47,7 @@ export default function Task({ propTitle, propDescription, propTime, onDelete })
 
     const handleEdit = (setter) => (event) => {
         setter((event.target.textContent) !== "" ? event.target.textContent : "请输入内容...");
+        onToggle(title,description,comments,attachments);
     };
 
     const handleAddComment = (newComment) => {
@@ -70,10 +72,13 @@ export default function Task({ propTitle, propDescription, propTime, onDelete })
     const handleAddAttachment = () => {
         setShowAttachments(true);
         setDialogOpen(true);
+        onToggle(title,description,comments,attachments);
     }
 
     const handleDeleteAttachment = (index) => {
+        URL.revokeObjectURL(attachments[index].previewer);
         setAttachments(prevAttachments => prevAttachments.filter((_, idx) => idx !== index));
+        onToggle(title,description,comments,attachments);
     }
 
     const handleDrop = (acceptedFiles) => {
@@ -87,10 +92,11 @@ export default function Task({ propTitle, propDescription, propTime, onDelete })
                 previewer: URL.createObjectURL(file), // 创建预览 URL
                 file // 也可以存储完整的文件对象
             }));
-            console.log(validFiles[0].name);
+            console.log(validFiles[0].previewer);
             setAttachments(prev => [...prev, ...filesWithDetails]);
         }
         setDialogOpen(false);
+        onToggle(title,description,comments,attachments);
     };
 
     const handlePreviewFile = (fileName) => {
@@ -237,6 +243,7 @@ export default function Task({ propTitle, propDescription, propTime, onDelete })
                     <Button onClick={() => setPreviewOpen(false)}>关闭</Button>
                 </DialogActions>
             </Dialog>)}
+            <BasicSelect initialState={initialState}/>
         </Card>
     );
 }
