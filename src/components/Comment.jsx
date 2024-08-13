@@ -12,17 +12,17 @@ const Comment = ({ initialDescription, time, onUpdate }) => {
     const handleBlur = (event) => {
         setIsEditing(false);
         setDescription(event.currentTarget.textContent);
-        console.log(description)
     };
+
     useEffect(() => {
         if (!isEditing) {
             onUpdate(description); // 在编辑结束后调用 onUpdate
         }
-    }, [description, isEditing, onUpdate]); // 依赖项包括 description 和 isEditing
+    }, [isEditing, onUpdate]); // 依赖项包括 description 和 isEditing
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1}}>
-            <Typography variant="body1" onClick={handleClick} onBlur={handleBlur} sx={{ flexGrow: 1, cursor: 'pointer' }} contentEditable align={"left"}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1}} border={"black"}>
+            <Typography variant="body1" onClick={handleClick} onBlur={handleBlur} sx={{ flexGrow: 1 }} contentEditable align={"left"} suppressContentEditableWarning>
                 {description}
             </Typography>
             <Typography variant="caption" color="textSecondary" sx={{ ml: 2 }} >
