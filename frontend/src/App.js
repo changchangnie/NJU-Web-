@@ -1,4 +1,4 @@
-import LoginSignup from "./components/LoginSignup";import TodoList from "./components/TaskList";
+import LoginSignup from "./components/LoginSignup";
 import './App.css'
 import Project from "./components/Project";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';

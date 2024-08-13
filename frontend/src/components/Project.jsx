@@ -8,7 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Add } from '@mui/icons-material';
 
 const Project = () => {
     const [todoTasks, setTodoTasks] = useState([]);
@@ -62,16 +61,11 @@ const Project = () => {
     }
 
     const handleCreateProject = () => {
-        const confirmCreate = window.confirm("确认创建新项目吗？这会导致你当前项目的丢失。");
+        window.confirm("确认创建新项目吗？这会导致你当前项目的丢失。");
         setDialogOpen(true);
         setTodoTasks([]); // 清空待办任务列表
         setInProgressTasks([]); // 清空进行中任务列表
         setCompletedTasks([]); // 清空已完成任务列表
-    };
-
-    const handleOpenProjectList = () => {
-        // 处理打开项目列表的逻辑
-        console.log("打开项目列表");
     };
 
     return (

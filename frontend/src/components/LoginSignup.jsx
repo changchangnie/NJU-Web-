@@ -13,7 +13,6 @@ const css = {
 };
 
 const LoginSignup = () => {
-    const [data, setData] = useState({});
     const [error, setError] = useState('');
     const navigator = useNavigate();
 
@@ -21,7 +20,6 @@ const LoginSignup = () => {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData);
-        setData({ ...data });
 
         const sendRequest = async (url, body) => {
             try {
@@ -55,7 +53,7 @@ const LoginSignup = () => {
             sendRequest(url, {
                 email: data['e-mail'],
                 password: data['password'],
-            });
+            }).then(() => (1));
         } else {
             // 注册
             if (data['password'] !== data['confirm-password']) {
@@ -65,7 +63,7 @@ const LoginSignup = () => {
             sendRequest(url, {
                 email: data['e-mail'],
                 password: data['password'],
-            });
+            }).then(() => (1));
         }
     };
 

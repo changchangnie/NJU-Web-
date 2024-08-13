@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
@@ -44,7 +44,6 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
     const [dialogOpen, setDialogOpen] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewFile, setPreviewFile] = useState(null);
-    const [listState,setListState] = useState({initialState});
 
     const handleEdit = (setter) => (event) => { //改变任务内容
         setter((event.target.textContent) !== "" ? event.target.textContent : "请输入内容...");
@@ -211,7 +210,7 @@ export default function Task({ propTitle, propDescription, propTime, onDelete, i
                         <List>
                             {attachments.map((attachment, index) => (
                                 <Stack direction="row">
-                                    <ListItem button key={index} onClick={() => handlePreviewFile(attachment)}>
+                                    <ListItem key={index} onClick={() => handlePreviewFile(attachment)}>
                                       <ListItemText primary={<span style={{ color: 'blue' }}>{attachment.name}</span>} />
                                     </ListItem>
                                     <IconButton color="error" aria-label="delete" size="medium" onClick={() => handleDeleteAttachment(index)}>
