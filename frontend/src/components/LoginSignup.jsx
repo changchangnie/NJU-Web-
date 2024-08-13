@@ -53,7 +53,7 @@ const LoginSignup = () => {
             sendRequest(url, {
                 email: data['e-mail'],
                 password: data['password'],
-            }).then(() => (1));
+            });
         } else {
             // 注册
             if (data['password'] !== data['confirm-password']) {
@@ -63,7 +63,7 @@ const LoginSignup = () => {
             sendRequest(url, {
                 email: data['e-mail'],
                 password: data['password'],
-            }).then(() => (1));
+            });
         }
     };
 

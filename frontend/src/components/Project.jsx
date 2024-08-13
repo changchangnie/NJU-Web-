@@ -61,7 +61,7 @@ const Project = () => {
     }
 
     const handleCreateProject = () => {
-        window.confirm("确认创建新项目吗？这会导致你当前项目的丢失。");
+        window.confirm("创建新项目会导致你当前项目的丢失。如果不想丢失项目，请在下个界面点击取消。");
         setDialogOpen(true);
         setTodoTasks([]); // 清空待办任务列表
         setInProgressTasks([]); // 清空进行中任务列表
